@@ -17,8 +17,10 @@ object Main extends App {
   // part 1:
   println(initGame.play(fromAscii(input)).circle.answer)
 
-  def pad(s: Seq[Int]) =  s ++ List(17, 31, 73, 47, 23)
-  def repeat(n: Int, s: Seq[Int]): List[Int] = (1 to n).toList flatMap { i => s }
+  def pad(s: Seq[Int]) = s ++ List(17, 31, 73, 47, 23)
+  def repeat(n: Int, s: Seq[Int]): List[Int] = (1 to n).toList flatMap { i =>
+    s
+  }
   def stringToSeq(s: String): Seq[Int] = s.toArray.map(_.toByte.toInt)
   def proccessInput(s: String) = repeat(64, pad(stringToSeq(s)))
 
