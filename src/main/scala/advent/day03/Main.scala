@@ -8,7 +8,10 @@ object Main extends App {
     def add(b: Pos) = Pos(x + b.x, y + b.y)
     def increase = add(Pos(1, 1))
     def move(dir: Pos) = add(dir)
-    def adjacent = (for (a <- -1 to 1; b <- -1 to 1) yield add(Pos(a, b)))
+    def adjacent: Seq[Pos] =
+      (for (a <- -1 to 1; b <- -1 to 1) yield add(Pos(a, b)))
+    def adjacentClose: Seq[Pos] =
+      Seq(Pos(x - 1, y), Pos(x + 1, y), Pos(x, y - 1), Pos(x, y + 1))
     def score(cache: Map[Pos, Int]): Int =
       adjacent
         .map(cache.get(_) match {
@@ -16,6 +19,7 @@ object Main extends App {
           case Some(n) => n
         })
         .reduce(_ + _)
+    def flatIndex(base: Int) = x * base + y
   }
 
   def directions =

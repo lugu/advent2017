@@ -41,29 +41,38 @@ object Main extends App {
   def progs = input.map(parser.analyse(_)).toList
   def graph: Map[Int, List[Int]] =
     progs.groupBy(_.pid).mapValues(_.flatMap(a => a.pipes).distinct)
-  def components(visiting: Int,
+  def components(visiting: List[Int],
                  graph: Map[Int, List[Int]],
                  visited: List[Int],
-                 connected: List[Int]): List[Int] = {
-    val pipes = graph(visiting)
-    // for pipes not visited add them to connected and continue:
-    val newConnected = (pipes ++ connected).distinct
-    val childConnected = pipes
-      .filter(!visited.contains(_))
-      .map(components(_, graph, visiting :: visited, newConnected))
-      .flatten
-    (newConnected ++ childConnected).distinct
-  }
+                 connected: List[Int]): (List[Int], List[Int]) =
+    visiting match {
+      case List() => (visited, connected)
+      case head :: rest => {
+        val pipes = graph(head)
+        // for pipes not visited add them to connected and continue:
+        val newConnected = (head :: pipes ++ connected).distinct
+        val newVisited = (head :: visited).distinct
+        val newVisiting =
+          (pipes ++ visiting).filter(p => !newVisited.contains(p))
+        components(newVisiting, graph, newVisited, newConnected)
+      }
+    }
 
-  def connected(pid: Int, graph: Map[Int, List[Int]]): List[Int] =
-    components(pid, graph, List(), List())
+  def connected(pid: Int, graph: Map[Int, List[Int]]): List[Int] = {
+    val (_, connexes) = components(List(pid), graph, List(), List(pid))
+    connexes
+  }
   def groupConnected(graph: Map[Int, List[Int]]): List[List[Int]] =
     graph.headOption match {
       case None => List()
       case Some((pid, pipes)) => {
-        val headConnected = connected(pid, graph)
-        val restGraph = graph.filterKeys(!headConnected.contains(_))
-        headConnected :: groupConnected(restGraph)
+        println("Processing " + pid)
+        if (pipes.isEmpty) List(pid) :: groupConnected(graph.tail)
+        else {
+          val headConnected = connected(pid, graph)
+          val restGraph = graph.filterKeys(!headConnected.contains(_))
+          headConnected :: groupConnected(restGraph)
+        }
       }
     }
   println(groupConnected(graph).size)
