@@ -53,9 +53,15 @@ object Main extends App {
 
   def toHex(l: Seq[Int]) = l.map(a => f"$a%02x").mkString
 
+  def knotHash(s: String): Seq[Int] =
+    (new Game(0, Circle(string, 0)))
+      .play(proccessInput(s))
+      .circle
+      .denseHash
+      .toSeq
   def initGame = new Game(0, Circle(string, 0))
   val endGame = initGame.play(source)
 
   // part 2:
-  println(toHex(endGame.circle.denseHash.toSeq))
+  println(toHex(knotHash(input)))
 }
