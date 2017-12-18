@@ -10,6 +10,9 @@ case class Partner(a: Char, b: Char) extends Move { def chars = toString }
 
 case class Dancers(dancers: Seq[Char]) {
   override def toString = dancers.mkString
+  def dance(movements: Seq[Move]): Dancers = movements.foldLeft(this) {
+    case (dancers, move) => dancers.doMove(move)
+  }
   def doMove(move: Move): Dancers = move match {
     case Spin(n) => {
       if (n < 0 || n >= dancers.size)
@@ -33,6 +36,10 @@ case class Dancers(dancers: Seq[Char]) {
       Dancers(mutable.toSeq)
     }
   }
+
+  def nTimes(n: Int, movements: Seq[Move]): Dancers = if (n == 0) this else dance(movements).nTimes(n - 1, movements)
+  def danceUntil(n: Int = 0, test: Dancers => Boolean, movements: Seq[Move]): Int = if (n != 0 && test(this)) n else dance(movements).danceUntil(n + 1, test, movements)
+
 }
 
 class DanceCollector extends RegexParsers {
@@ -67,9 +74,9 @@ object Main extends App {
   def parser = (new DanceCollector)
   def movements: Seq[Move] = parser.analyse(input)
 
-  def init = Dancers(('a' to 'p').toSeq)
-  def result = movements.foldLeft(init) {
-    case (dancers, move) => dancers.doMove(move)
-  }
-  println(result)
+  def aq = ('a' to 'p').toSeq
+  def init = Dancers(aq)
+  println("one: " + init.dance(movements))
+  val timesToABC = init.danceUntil(0, _.toString == aq.mkString, movements)
+  println("one billion: " + init.nTimes(1000*1000*1000%timesToABC, movements))
 }
