@@ -37,8 +37,13 @@ case class Dancers(dancers: Seq[Char]) {
     }
   }
 
-  def nTimes(n: Int, movements: Seq[Move]): Dancers = if (n == 0) this else dance(movements).nTimes(n - 1, movements)
-  def danceUntil(n: Int = 0, test: Dancers => Boolean, movements: Seq[Move]): Int = if (n != 0 && test(this)) n else dance(movements).danceUntil(n + 1, test, movements)
+  def nTimes(n: Int, movements: Seq[Move]): Dancers =
+    if (n == 0) this else dance(movements).nTimes(n - 1, movements)
+  def danceUntil(n: Int = 0,
+                 test: Dancers => Boolean,
+                 movements: Seq[Move]): Int =
+    if (n != 0 && test(this)) n
+    else dance(movements).danceUntil(n + 1, test, movements)
 
 }
 
@@ -78,5 +83,6 @@ object Main extends App {
   def init = Dancers(aq)
   println("one: " + init.dance(movements))
   val timesToABC = init.danceUntil(0, _.toString == aq.mkString, movements)
-  println("one billion: " + init.nTimes(1000*1000*1000%timesToABC, movements))
+  println(
+    "one billion: " + init.nTimes(1000 * 1000 * 1000 % timesToABC, movements))
 }
