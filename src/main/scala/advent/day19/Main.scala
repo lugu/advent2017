@@ -1,7 +1,5 @@
 package advent.day19
 
-import scala.io.Source
-
 object Main extends App {
 
   case class InvalidDirection(p: Packet) extends Exception {
@@ -61,7 +59,7 @@ object Main extends App {
     }
   }
 
-  def input = Source.fromResource("day19.txt").getLines.toSeq
+  def input = scala.io.Source.fromResource("day19.txt").getLines.toSeq
 
   def grid: Map[Point, Char] =
     input.zipWithIndex.flatMap {
