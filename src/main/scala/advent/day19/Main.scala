@@ -1,7 +1,6 @@
 package advent.day19
 
 import scala.io.Source
-import scala.util.parsing.combinator.RegexParsers
 
 object Main extends App {
 
