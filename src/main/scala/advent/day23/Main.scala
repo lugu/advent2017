@@ -161,5 +161,18 @@ class InstructionParser extends scala.util.parsing.combinator.RegexParsers {
   def input = scala.io.Source.fromResource("day23.txt").getLines
   def instructions: Seq[Instruction] = input.map(parser.analyse(_)).toSeq
   val prog = Prog(State(Regs.zero, 0), instructions)
-  println(prog.run)
+
+  def part1() {
+    println(prog.run)
+  }
+
+  def isPrime(i: Int): Boolean = {
+    if (i <= 1) false
+    else if (i == 2) true
+    else !(2 to (i-1)).exists(x => i % x == 0)
+  }
+  def part2() = {
+    println((0 to 1000).map(i => (17 * i) + 109900).filter(!isPrime(_)).size)
+  }
+  part2()
 }

@@ -13,10 +13,8 @@ int main() {
         b += 100000;
         c = b;
         c += 17000;
-        // c == 126900
     }
-    // b == 109900
-    for (; b += 17; b != c) { // 1000 times
+    for (; b != c; b += 17) {
         f = 1;
         d = 2;
         do {
@@ -27,14 +25,11 @@ int main() {
                 }
                 e++;
             } while (b != e);
-            // e == b
             d++;
         } while (b != d);
-        // d == b
         if (f == 0) {
             h++;
         }
-        b -= 17;
     }
     printf("h: %d\n", h);
     return 0;
